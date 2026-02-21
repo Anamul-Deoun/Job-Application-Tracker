@@ -27,6 +27,15 @@
         .display-none {
             display: none;
         }
+        .bg-btn{
+            background-color: #3B82F6;
+        }
+        .btn-color{
+            color: white;
+        }
+        .btn-black{
+            color: black;
+        }
     </style>
 
 </head>
@@ -39,20 +48,19 @@
         </h1>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 border-b-2 border-gray-200 pb-8">
-
             <div class="card card-border bg-base-100 p-5 mt-5">
                 <p class="text-sm font-medium">Total</p>
-                <h3 class="text-color text-2xl font-bold mt-2">0</h3>
+                <h3 id="total" class="text-color text-2xl font-bold mt-2">0</h3>
             </div>
 
             <div class="card card-border bg-base-100 p-5 mt-5">
                 <p class="text-sm font-medium">Interview</p>
-                <h3 class="text-green-500 text-2xl font-bold mt-2">0</h3>
+                <h3 id="interview" class="text-green-500 text-2xl font-bold mt-2">0</h3>
             </div>
 
             <div class="card card-border bg-base-100 p-5 mt-5">
                 <p class="text-sm font-medium">Rejected</p>
-                <h3 class="text-red-500 text-2xl font-bold mt-2">0</h3>
+                <h3 id="rejected" class="text-red-500 text-2xl font-bold mt-2">0</h3>
             </div>
 
         </div>
@@ -68,9 +76,9 @@
             </div>
 
             <div class="mb-4 flex flex-wrap gap-2">
-                <button class="btn bg-[#3B82F6] text-white">All</button>
-                <button class="btn bg-base-100">Interview</button>
-                <button class="btn bg-base-100">Rejected</button>
+                <button onclick="toggleStyle('all-filter-btn')" id="all-filter-btn" class="btn bg-btn w-20 btn-color">All</button>
+                <button onclick="toggleStyle('interview-filter-btn')" id="interview-filter-btn" class="btn bg-base-100">Interview</button>
+                <button onclick="toggleStyle('rejected-filter-btn')" id="rejected-filter-btn" class="btn bg-base-100">Rejected</button>
             </div>
         </section>
 
@@ -89,8 +97,8 @@
             </div> -->
         </section>
 
-        <section class="pb-15">
-            <div class="space-y-4">
+        <!-- all cards -->
+        <section id="allCards" class="pb-15 space-y-4">
                 <!-- card-1 -->
                 <div class="card-body card-border bg-base-100 rounded-lg p-4 sm:p-6">
                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
@@ -362,9 +370,10 @@
                         </button>
                     </div>
                 </div>
-            </div>
         </section>
     </main>
+
+    <script src="./js/script.js"></script>
 
 </body>
 
