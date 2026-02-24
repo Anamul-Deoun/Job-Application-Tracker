@@ -15,15 +15,12 @@ const mainContainer = document.querySelector('main');
 const filterSection = document.getElementById('filtered-section')
 const noJobSection = document.getElementById('no-job-section')
 
-
-
 function calculateCount() {
     total.innerText = allCardSection.children.length;
 
     interviewCount.innerText = interviewList.length;
     rejectedCount.innerText = rejectedList.length;
 
-    // 👇 এখানে তোমার length check logic
     if (currentStatus == 'all-filter-btn') {
 
         if (allCardSection.children.length === 0) {
@@ -51,6 +48,20 @@ function calculateCount() {
             noJobSection.classList.add('hidden');
         }
 
+    }
+
+    const totalJobs = allCardSection.children.length;
+    let filteredJobs = 0;
+
+    if (currentStatus === 'all') {
+        filteredJobs = totalJobs;
+        document.getElementById("right-job").innerText = `${totalJobs} jobs`;
+    } else if (currentStatus === 'interview-filter-btn') {
+        filteredJobs = interviewList.length;
+        document.getElementById("right-job").innerText = `${filteredJobs} of ${totalJobs} jobs`;
+    } else if (currentStatus === 'rejected-filter-btn') {
+        filteredJobs = rejectedList.length;
+        document.getElementById("right-job").innerText = `${filteredJobs} of ${totalJobs} jobs`;
     }
 }
 calculateCount()
@@ -88,120 +99,29 @@ function toggleStyle(id) {
 
 }
 
-
-
-// mainContainer.addEventListener('click', function (event) {
-
-//     const parentNode = event.target.closest('.card-body');
-//     if (!parentNode) return;
-
-//     const cardTitle = parentNode.querySelector('.card-title').innerText;
-//     const position = parentNode.querySelector('.position').innerText;
-//     const deleteBtn = parentNode.querySelector('.delete').innerText;
-//     const salary = parentNode.querySelector('.salary').innerText;
-//     const subText = parentNode.querySelector('.sub-text').innerText;
-//     const interRejeBtn = parentNode.querySelector('.inter-reje-btn').innerText;
-//     const statusElement = parentNode.querySelector('.status');
-
-//     // ================= INTERVIEW =================
-//     if (event.target.classList.contains('interview-btn')) {
-
-//         if (statusElement.innerText === 'Interview') return;
-
-//         statusElement.innerText = 'Interview';
-
-//         rejectedList = rejectedList.filter(item => item.cardTitle !== cardTitle);
-
-//         const alreadyExist = interviewList.some(item => item.cardTitle === cardTitle);
-
-//         if (!alreadyExist) {
-//             interviewList.push({
-//                 cardTitle,
-//                 position,
-//                 deleteBtn,
-//                 salary,
-//                 status: 'Interview',
-//                 subText,
-//                 interRejeBtn
-//             });
-//         }
-
-//         if (currentStatus === 'interview-filter-btn') {
-//             renderInterview();
-//         }
-
-//         calculateCount();
-//     }
-
-//     // ================= REJECTED =================
-//     // ================= REJECTED =================
-//     if (event.target.classList.contains('rejected-btn')) {
-
-//         if (statusElement.innerText === 'Rejected') return;
-
-//         statusElement.innerText = 'Rejected';
-
-//         interviewList = interviewList.filter(item => item.cardTitle !== cardTitle);
-
-//         const alreadyExist = rejectedList.some(item => item.cardTitle === cardTitle);
-
-//         if (!alreadyExist) {
-//             rejectedList.push({
-//                 cardTitle,
-//                 position,
-//                 deleteBtn,
-//                 salary,
-//                 status: 'Rejected',
-//                 subText,
-//                 interRejeBtn
-//             });
-//         }
-
-//         // 🔥 এখানে দুইটা condition লাগবে
-//         if (currentStatus === 'rejected-filter-btn') {
-//             renderRejected();
-//         }
-
-//         if (currentStatus === 'interview-filter-btn') {
-//             renderInterview();
-//         }
-
-//         calculateCount();
-//     }
-// });
-
-
-
-
-
-
 mainContainer.addEventListener('click', function (event) {
+    if (event.target.classList.contains('delete')) {
+        const parentCard = event.target.closest('.card-body');
+        if (!parentCard) return;
+        const cardTitle = parentCard.querySelector('.card-title').innerText;
+        const allCards = Array.from(allCardSection.children);
+        allCards.forEach(card => {
+            const title = card.querySelector('.card-title').innerText;
+            if (title === cardTitle) {
+                allCardSection.removeChild(card);
+            }
+        });
+        interviewList = interviewList.filter(item => item.cardTitle !== cardTitle);
+        rejectedList = rejectedList.filter(item => item.cardTitle !== cardTitle);
 
-
-if (event.target.classList.contains('delete')) {
-    const parentCard = event.target.closest('.card-body');
-    if (!parentCard) return; 
-    const cardTitle = parentCard.querySelector('.card-title').innerText;
-    const allCards = Array.from(allCardSection.children);
-    allCards.forEach(card => {
-        const title = card.querySelector('.card-title').innerText;
-        if (title === cardTitle) {
-            allCardSection.removeChild(card);
+        if (currentStatus === 'interview-filter-btn') {
+            renderInterview();
         }
-    });
-    interviewList = interviewList.filter(item => item.cardTitle !== cardTitle);
-    rejectedList = rejectedList.filter(item => item.cardTitle !== cardTitle);
-    
-    if (currentStatus === 'interview-filter-btn') {
-        renderInterview();
-    } 
-    if (currentStatus === 'rejected-filter-btn') {
-        renderRejected();
+        if (currentStatus === 'rejected-filter-btn') {
+            renderRejected();
+        }
+        calculateCount();
     }
-    calculateCount();
-}
-
-    // console.log(event.target.classList.contains('interview-btn'))
 
     if (event.target.classList.contains('interview-btn')) {
         const parentNode = event.target.parentNode.parentNode;
@@ -238,8 +158,6 @@ if (event.target.classList.contains('delete')) {
         if (currentStatus == 'interview-filter-btn') {
             renderInterview();
         }
-
-        // renderInterview()
     }
     else if (event.target.classList.contains('rejected-btn')) {
         const parentNode = event.target.parentNode.parentNode;
@@ -276,16 +194,12 @@ if (event.target.classList.contains('delete')) {
         }
 
         calculateCount()
-
-        // renderRejected()
     }
 
 })
 
 mainContainer.addEventListener('click', function (event) {
 
-    // console.log(event.target.classList.contains('interview-btn'))
-
     if (event.target.classList.contains('interview-btn')) {
         const parentNode = event.target.parentNode.parentNode;
         const cardTitle = parentNode.querySelector('.card-title').innerText;
@@ -321,8 +235,6 @@ mainContainer.addEventListener('click', function (event) {
         if (currentStatus == 'rejected-filter-btn') {
             renderRejected();
         }
-
-        // renderInterview()
     }
     else if (event.target.classList.contains('rejected-btn')) {
         const parentNode = event.target.parentNode.parentNode;
@@ -357,10 +269,7 @@ mainContainer.addEventListener('click', function (event) {
         if (currentStatus == 'interview-filter-btn') {
             renderInterview();
         }
-
         // calculateCount()
-
-        // renderRejected()
     }
 
 })
@@ -382,7 +291,7 @@ function renderInterview() {
                                 ${interview.position}
                             </p>
                         </div>
-                        <img class="delete cursor-pointer w-6" src="./assets/delete.png" alt="">
+                        <img class="delete cursor-pointer w-8" src="./assets/delete.png" alt="">
                     </div>
                     <p class="salary text-neutral/50 mb-4">
                         ${interview.salary}
@@ -423,7 +332,7 @@ function renderRejected() {
                                 React Native Developer
                             </p>
                         </div>
-                        <img class="delete cursor-pointer w-6" src="./assets/delete.png" alt="">
+                        <img class="delete cursor-pointer w-8" src="./assets/delete.png" alt="">
                     </div>
                     <p class="salary text-neutral/50 mb-4">
                         Remote • Full-time • $130,000 - $175,000
@@ -449,14 +358,10 @@ function renderRejected() {
     }
 }
 
-
-
 function noJobInterview() {
     noJobSection.innerHTML = ''
 
-    // for (let noJob of interviewList) {
     let div = document.createElement('div');
-    // div.className = 'card-body card-border bg-base-100 rounded-lg p-4 sm:p-6 mb-5'
     div.innerHTML = `
             <div class="card card-border bg-base-100 flex items-center py-15 px-10">
                 <img class="w-25" src="./assets/file.png" alt="">
@@ -467,5 +372,4 @@ function noJobInterview() {
             </div>
         `
     noJobSection.appendChild(div)
-    // }
 }
